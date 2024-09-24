@@ -142,13 +142,12 @@ grid_search_rf = GridSearchCV(estimator=rf_classifier, param_grid=param_grid_rf,
 
 ### RESULTS
 ```markdown
-## Results
 Below is the comparison of accuracy and F1 scores for the three models:
 
 | Model               | Accuracy |
 |---------------------|----------|
-| EfficientNet_b0         | 99.40%    |
-| ResNet-152           | 99.88%    |
-| Hybrid CNN + RF      | 96.03%    |
+| EfficientNet_b0     | 99.40%    |
+| ResNet-152          | 99.88%    |
+| Hybrid CNN + RF     | 96.03%    |
 
 
