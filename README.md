@@ -12,10 +12,11 @@ We augmented out images in two steps, first we quadrupled our dataset by applyin
 #### Reddot Infected Image:
 <img src="https://github.com/NatanshK/IGEM-IITR-Drylab/blob/main/Original_Dataset/RedRot/redrot%20(225).jpeg?raw=true" alt="Red Dot Infected Image" height="500"/>
 
-<h3>Healthy Leaf Example:</h3>
-<img src="https://github.com/NatanshK/IGEM-IITR-Drylab/blob/main/Original_Dataset/Healthy/healthy%20(360).jpeg?raw=true" alt="Healthy Image" height="500" style="display:inline-block; margin-right: 20px;"/>
-<h3>Reddot Infected Image:</h3>
-<img src="https://github.com/NatanshK/IGEM-IITR-Drylab/blob/main/Original_Dataset/RedRot/redrot%20(225).jpeg?raw=true" alt="Red Dot Infected Image" height="500" style="display:inline-block;"/>
+| Healthy Leaf Example | Reddot Infected Image |
+|----------------------|-----------------------|
+| ![Healthy Leaf](https://github.com/NatanshK/IGEM-IITR-Drylab/blob/main/Original_Dataset/Healthy/healthy%20(360).jpeg?raw=true) | ![Reddot Infected](https://github.com/NatanshK/IGEM-IITR-Drylab/blob/main/Original_Dataset/RedRot/redrot%20(225).jpeg?raw=true) |
+
+
 
 
   #### DATA CLEANING
