@@ -62,6 +62,46 @@ def find_bounding_box(image, threshold=10):
   </tr>
 </table>
 
+<h3>Image Cleaning Code:</h3>
+<pre>
+<code>
+def find_bounding_box(image, threshold=10):
+    height, width, _ = image.shape
+
+    gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+    _, binary_image = cv2.threshold(gray_image, threshold, 255, cv2.THRESH_BINARY)
+
+    rows = np.any(binary_image, axis=1)
+    cols = np.any(binary_image, axis=0)
+
+    if np.any(rows) and np.any(cols):
+        min_y = np.argmax(rows)
+        max_y = len(rows) - 1 - np.argmax(rows[::-1])
+        min_x = np.argmax(cols)
+        max_x = len(cols) - 1 - np.argmax(cols[::-1])
+
+        cropped_image = image[min_y:max_y+1, min_x:max_x+1]
+    else:
+        cropped_image = image
+
+    return cropped_image
+</code>
+</pre>
+
+<table style="width: 100%;">
+  <tr>
+    <td style="width: 50%;">
+      <h3>Original Image:</h3>
+      <img src="https://github.com/NatanshK/IGEM-IITR-Drylab/blob/main/DATASET/REDDOTOA/aug_redrot%20(1)_270.jpeg?raw=true" alt="Original Image" style="height: 500px; width: auto;"/>
+    </td>
+    <td style="width: 50%;">
+      <h3>Cleaned Image:</h3>
+      <img src="https://github.com/NatanshK/IGEM-IITR-Drylab/blob/main/DATASET_NEW/REDDOT/aug_redrot%20(1)_270.jpeg?raw=true" alt="Cleaned Image" style="height: 500px; width: auto;"/>
+    </td>
+  </tr>
+</table>
+
 ## Table of Contents
 - [Dataset](#dataset)
 - [Image Augmentation and Cleaning](#image-augmentation-and-cleaning)
