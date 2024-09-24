@@ -69,7 +69,7 @@ def find_bounding_box(image, threshold=10):
 
 ### MODEL TRAINING
 #### EFFICIENTNET
-EfficientNet was trained on the augmented and cleaned dataset.
+EfficientNet_b0 was trained on the augmented and cleaned dataset.
 
 **Training Code**:
 ```python
@@ -81,22 +81,30 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 model = models.efficientnet_b0(pretrained=True)
 num_ftrs = model.classifier[1].in_features
 model.classifier[1] = nn.Linear(num_ftrs, 2)
+model = model.to(device)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=5, verbose=True)
-
+```
 
 #### ResNet
-```markdown
-## ResNet
 ResNet-152 was fine-tuned on the dataset, leveraging pre-trained ImageNet weights.
 
 **Training Code**:
 ```python
 import torch
-from torchvision.models import resnet152
+import torch
+import torch.nn as nn
+import torchvision.models as models
+import torch.optim as optim
+from torch.optim.lr_scheduler import ReduceLROnPlateau
 
-model = resnet152(pretrained=True)
-model.fc = torch.nn.Linear(2048, 2)  # Adjusting for 2 classes
-
+model = models.resnet152(pretrained=True)
+num_ftrs = model.fc.in_features
+model.fc = nn.Linear(num_ftrs, 2)  
+model = model.to(device)
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.Adam(model.parameters(), lr=0.001)
+scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=5, verbose=True)
+```
 
