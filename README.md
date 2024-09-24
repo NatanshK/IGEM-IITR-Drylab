@@ -91,16 +91,17 @@ def find_bounding_box(image, threshold=10):
 
 <table style="width: 100%;">
   <tr>
-    <td style="width: 50%;">
+    <td style="width: 500px; vertical-align: top;">
       <h3>Original Image:</h3>
       <img src="https://github.com/NatanshK/IGEM-IITR-Drylab/blob/main/DATASET/REDDOTOA/aug_redrot%20(1)_270.jpeg?raw=true" alt="Original Image" style="height: 500px; width: auto;"/>
     </td>
-    <td style="width: 50%;">
+    <td style="width: 500px; vertical-align: top;">
       <h3>Cleaned Image:</h3>
       <img src="https://github.com/NatanshK/IGEM-IITR-Drylab/blob/main/DATASET_NEW/REDDOT/aug_redrot%20(1)_270.jpeg?raw=true" alt="Cleaned Image" style="height: 500px; width: auto;"/>
     </td>
   </tr>
 </table>
+
 
 ## Table of Contents
 - [Dataset](#dataset)
