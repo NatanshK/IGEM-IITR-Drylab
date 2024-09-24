@@ -16,11 +16,11 @@ The dataset used for this project is available [here](https://data.mendeley.com/
 - **518 images** of sugarcane leaves infected with *reddot disease*.
 - **522 images** of healthy sugarcane leaves.
 
-###To enhance the diversity of the dataset and improve model generalization, we employed a two-step data augmentation process:
+### To enhance the diversity of the dataset and improve model generalization, we employed a two-step data augmentation process:
 #### 1. Image Rotation
 Each image in the dataset was subjected to three rotations, thereby quadrupling the size of the dataset.
 #### 2. Further Augmentation
-The dataset was further expanded by applying additional augmentation techniques like RandomResizedCrop, sharpening, introducing gaussian noise, flipping etc. with probabilistic randomness, which resulted in doubling the dataset size:
+The dataset was further expanded by applying additional augmentation techniques like RandomResizedCrop, sharpening, introducing gaussian noise, flipping etc. with probabilistic randomness, which resulted in doubling the dataset size.
 <table>
   <tr>
     <td>
