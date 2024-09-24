@@ -3,7 +3,11 @@
 
 ## Table of Contents
 - [Dataset](#dataset)
-- [Data Cleaning](#data-cleaning) 
+- [Data Cleaning](#data-cleaning)
+- - [Model Training](#model-training)
+  - [EfficientNet](#efficientnet)
+  - [ResNet](#resnet)
+  - [CNN + Random Forest](#cnn-random-forest) 
 ### DATASET
   We found our dataset [here](https://data.mendeley.com/datasets/9424skmnrk/1). It contains 518 images of sugarcane leaves infected with reddot and 522 images of healthy sugarcane leaves.
 We augmented out images in two steps, first we quadrupled our dataset by applying three rotations on every image. Further we doubled our dataset by applying standard data augmentation techniques like flipping, randomized cropping, introducing gaussian noise etc with some probabilities to maintain randomness.
@@ -62,6 +66,19 @@ def find_bounding_box(image, threshold=10):
     </td>
   </tr>
 </table>
+
+### MODEL TRAINING
+#### EFFICIENTNET
+EfficientNet was trained on the augmented and cleaned dataset.
+**Training Code**:
+```python
+import torchvision.models as models
+model = models.efficientnet_b0(pretrained=True)
+num_ftrs = model.classifier[1].in_features
+model.classifier[1] = nn.Linear(num_ftrs, 2)
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.Adam(model.parameters(), lr=0.001)
+scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=5, verbose=True)
 
 
 
