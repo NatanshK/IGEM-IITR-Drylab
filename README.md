@@ -32,24 +32,18 @@ The image cleaning process involves converting the images to grayscale and apply
 <code>
 def find_bounding_box(image, threshold=10):
     height, width, _ = image.shape
-
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
     _, binary_image = cv2.threshold(gray_image, threshold, 255, cv2.THRESH_BINARY)
-
     rows = np.any(binary_image, axis=1)
     cols = np.any(binary_image, axis=0)
-
     if np.any(rows) and np.any(cols):
         min_y = np.argmax(rows)
         max_y = len(rows) - 1 - np.argmax(rows[::-1])
         min_x = np.argmax(cols)
         max_x = len(cols) - 1 - np.argmax(cols[::-1])
-
         cropped_image = image[min_y:max_y+1, min_x:max_x+1]
     else:
         cropped_image = image
-
     return cropped_image
 </code>
 </pre>
@@ -127,23 +121,20 @@ cnn_model.eval()
 def extract_features(dataloader, model):
     features_list = []
     labels_list = []
-    
     with torch.no_grad():
         for inputs, labels in dataloader:
             inputs = inputs.to(device)
             features = model(inputs) 
             features_list.append(features.cpu().numpy())
             labels_list.append(labels.cpu().numpy())
-    
     return np.vstack(features_list), np.hstack(labels_list)
-rf_classifier = RandomForestClassifier(random_state=42)
 
+rf_classifier = RandomForestClassifier(random_state=42)
 param_grid_rf = {
     'n_estimators': [100, 200],
     'max_depth': [10, 20],
     'min_samples_split': [2, 5]
 }
-
 grid_search_rf = GridSearchCV(estimator=rf_classifier, param_grid=param_grid_rf, cv=3, scoring='accuracy', n_jobs=-1)
 ```
 
