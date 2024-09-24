@@ -7,11 +7,6 @@
 ### DATASET
   We found our dataset [here](https://data.mendeley.com/datasets/9424skmnrk/1). It contains 518 images of sugarcane leaves infected with reddot and 522 images of healthy sugarcane leaves.
 We augmented out images in two steps, first we quadrupled our dataset by applying three rotations on every image. Further we doubled our dataset by applying standard data augmentation techniques like flipping, randomized cropping, introducing gaussian noise etc with some probabilities to maintain randomness.
-#### Healthy Leaf Example: 
-<img src="https://github.com/NatanshK/IGEM-IITR-Drylab/blob/main/Original_Dataset/Healthy/healthy%20(360).jpeg?raw=true" alt="Healthy Image" height="500" style="margin-right: 200px;"/>
-#### Reddot Infected Image:
-<img src="https://github.com/NatanshK/IGEM-IITR-Drylab/blob/main/Original_Dataset/RedRot/redrot%20(225).jpeg?raw=true" alt="Red Dot Infected Image" height="500"/>
-
 <table>
   <tr>
     <td>
@@ -19,17 +14,53 @@ We augmented out images in two steps, first we quadrupled our dataset by applyin
       <img src="https://github.com/NatanshK/IGEM-IITR-Drylab/blob/main/Original_Dataset/Healthy/healthy%20(360).jpeg?raw=true" alt="Healthy Image" style="height: 500px;"/>
     </td>
     <td>
-      <h3>Reddot Infected Image:</h3>
+      <h3>Reddot Infected Example:</h3>
       <img src="https://github.com/NatanshK/IGEM-IITR-Drylab/blob/main/Original_Dataset/RedRot/redrot%20(225).jpeg?raw=true" alt="Red Dot Infected Image" style="height: 500px;"/>
     </td>
   </tr>
 </table>
 
+### DATA CLEANING
+<h3>Image Cleaning Code:</h3>
+<pre>
+<code>
+def find_bounding_box(image, threshold=10):
+    height, width, _ = image.shape
 
+    gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
+    
+    _, binary_image = cv2.threshold(gray_image, threshold, 255, cv2.THRESH_BINARY)
 
+    rows = np.any(binary_image, axis=1)
+    cols = np.any(binary_image, axis=0)
 
-  #### DATA CLEANING
+    if np.any(rows) and np.any(cols):
+        min_y = np.argmax(rows)
+        max_y = len(rows) - 1 - np.argmax(rows[::-1])
+        min_x = np.argmax(cols)
+        max_x = len(cols) - 1 - np.argmax(cols[::-1])
+
+        cropped_image = image[min_y:max_y+1, min_x:max_x+1]
+    else:
+        cropped_image = image
+
+    return cropped_image
+</code>
+</pre>
+
+<table>
+  <tr>
+    <td>
+      <h3>Original Image:</h3>
+      <img src="https://github.com/NatanshK/IGEM-IITR-Drylab/blob/main/DATASET/REDDOTOA/aug_redrot%20(1)_270.jpeg?raw=true" alt="Original Image" style="height: 500px;"/>
+    </td>
+    <td>
+      <h3>Cleaned Image:</h3>
+      <img src="https://github.com/NatanshK/IGEM-IITR-Drylab/blob/main/DATASET_NEW/REDDOT/aug_redrot%20(1)_270.jpeg?raw=true" alt="Cleaned Image" style="height: 500px;"/>
+    </td>
+  </tr>
+</table>
 
 ## Table of Contents
 - [Dataset](#dataset)
