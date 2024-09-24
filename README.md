@@ -9,9 +9,18 @@
   - [ResNet](#resnet)
   - [CNN + Random Forest](#cnn--random-forest)
 - [Results](#results)
-### DATASET
-  We found our dataset [here](https://data.mendeley.com/datasets/9424skmnrk/1). It contains 518 images of sugarcane leaves infected with reddot and 522 images of healthy sugarcane leaves.
-We augmented out images in two steps, first we quadrupled our dataset by applying three rotations on every image. Further we doubled our dataset by applying standard data augmentation techniques like flipping, randomized cropping, introducing gaussian noise etc with some probabilities to maintain randomness.
+
+### Dataset
+
+The dataset used for this project is available [here](https://data.mendeley.com/datasets/9424skmnrk/1). It consists of:
+- **518 images** of sugarcane leaves infected with *reddot disease*.
+- **522 images** of healthy sugarcane leaves.
+
+To enhance the diversity of the dataset and improve model generalization, we employed a two-step data augmentation process:
+#### 1. Image Rotation
+Each image in the dataset was subjected to three rotations, thereby quadrupling the size of the dataset.
+#### 2. Standard Augmentation Techniques
+The dataset was further expanded by applying additional augmentation techniques with probabilistic randomness, which resulted in doubling the dataset size:
 <table>
   <tr>
     <td>
@@ -142,12 +151,12 @@ grid_search_rf = GridSearchCV(estimator=rf_classifier, param_grid=param_grid_rf,
 
 ### RESULTS
 ```markdown
-Below is the comparison of accuracy and F1 scores for the three models:
+Below is the comparison of accuracy for the three models:
 
 | Model               | Accuracy |
 |---------------------|----------|
-| EfficientNet_b0     | 99.40%    |
-| ResNet-152          | 99.88%    |
-| Hybrid CNN + RF     | 96.03%    |
-
+| EfficientNet_b0     | 99.40%   |
+| ResNet-152          | 99.88%   |
+| Hybrid CNN + RF     | 96.03%   |
+```
 
