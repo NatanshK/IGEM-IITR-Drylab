@@ -7,7 +7,7 @@
 ### DATASET
   We found our dataset [here](https://data.mendeley.com/datasets/9424skmnrk/1). It contains 518 images of sugarcane leaves infected with reddot and 522 images of healthy sugarcane leaves.
 We augmented out images in two steps, first we quadrupled our dataset by applying three rotations on every image. Further we doubled our dataset by applying standard data augmentation techniques like flipping, randomized cropping, introducing gaussian noise etc with some probabilities to maintain randomness.
-![Healthy Image]([https://path_to_image.com/healthy_example.png](https://github.com/NatanshK/IGEM-IITR-Drylab/blob/main/Original_Dataset/Healthy/healthy%20(107).jpeg)) ![Red Dot Infected Image]([https://path_to_image.com/reddot_example.png](https://github.com/NatanshK/IGEM-IITR-Drylab/blob/main/Original_Dataset/RedRot/redrot%20(117).jpeg))
+![Healthy Image](https://github.com/NatanshK/IGEM-IITR-Drylab/blob/main/Original_Dataset/RedRot/redrot%20(117).jpeg?raw=true) ![Red Dot Infected Image]([https://path_to_image.com/reddot_example.png](https://github.com/NatanshK/IGEM-IITR-Drylab/blob/main/Original_Dataset/RedRot/redrot%20(117).jpeg))
   #### DATA CLEANING
 
 ## Table of Contents
