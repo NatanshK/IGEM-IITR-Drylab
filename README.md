@@ -7,7 +7,8 @@
 - [Model Training](#model-training)
   - [EfficientNet](#efficientnet)
   - [ResNet](#resnet)
-  - [CNN + Random Forest](#cnn--random-forest) 
+  - [CNN + Random Forest](#cnn--random-forest)
+- [Results](#results)
 ### DATASET
   We found our dataset [here](https://data.mendeley.com/datasets/9424skmnrk/1). It contains 518 images of sugarcane leaves infected with reddot and 522 images of healthy sugarcane leaves.
 We augmented out images in two steps, first we quadrupled our dataset by applying three rotations on every image. Further we doubled our dataset by applying standard data augmentation techniques like flipping, randomized cropping, introducing gaussian noise etc with some probabilities to maintain randomness.
@@ -137,4 +138,17 @@ param_grid_rf = {
 }
 grid_search_rf = GridSearchCV(estimator=rf_classifier, param_grid=param_grid_rf, cv=3, scoring='accuracy', n_jobs=-1)
 ```
+
+
+### RESULTS
+```markdown
+## Results
+Below is the comparison of accuracy and F1 scores for the three models:
+
+| Model               | Accuracy |
+|---------------------|----------|
+| EfficientNet_b0         | 99.40%    |
+| ResNet-152           | 99.88%    |
+| Hybrid CNN + RF      | 96.03%    |
+
 
