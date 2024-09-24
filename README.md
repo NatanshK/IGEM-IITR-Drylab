@@ -7,7 +7,7 @@
 - [Model Training](#model-training)
   - [EfficientNet](#efficientnet)
   - [ResNet](#resnet)
-  - [CNN + Random Forest](#cnn-+-random-forest) 
+  - [CNN + Random Forest](#cnn-random-forest) 
 ### DATASET
   We found our dataset [here](https://data.mendeley.com/datasets/9424skmnrk/1). It contains 518 images of sugarcane leaves infected with reddot and 522 images of healthy sugarcane leaves.
 We augmented out images in two steps, first we quadrupled our dataset by applying three rotations on every image. Further we doubled our dataset by applying standard data augmentation techniques like flipping, randomized cropping, introducing gaussian noise etc with some probabilities to maintain randomness.
