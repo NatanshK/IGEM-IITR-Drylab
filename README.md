@@ -4,10 +4,10 @@
 ## Table of Contents
 - [Dataset](#dataset)
 - [Data Cleaning](#data-cleaning)
-- - [Model Training](#model-training)
+- [Model Training](#model-training)
   - [EfficientNet](#efficientnet)
   - [ResNet](#resnet)
-  - [CNN + Random Forest](#cnn-random-forest) 
+  - [CNN + Random Forest](#cnn-+-random-forest) 
 ### DATASET
   We found our dataset [here](https://data.mendeley.com/datasets/9424skmnrk/1). It contains 518 images of sugarcane leaves infected with reddot and 522 images of healthy sugarcane leaves.
 We augmented out images in two steps, first we quadrupled our dataset by applying three rotations on every image. Further we doubled our dataset by applying standard data augmentation techniques like flipping, randomized cropping, introducing gaussian noise etc with some probabilities to maintain randomness.
@@ -106,5 +106,44 @@ model = model.to(device)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=5, verbose=True)
+```
+#### CNN + RANDOM FOREST
+A Random Forest classifier was trained on features extracted from a fine-tuned ResNet-18 model, specifically to detect red dot disease in sugarcane leaves. This approach leverages the deep learning model's ability to generate informative feature representations for enhanced classification accuracy.
+
+**Training Code**:
+```python
+import torch
+import torch.nn as nn
+import torchvision.models as models
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import GridSearchCV
+from sklearn.preprocessing import StandardScaler
+
+cnn_model = models.resnet18(pretrained=True)
+cnn_model.fc = nn.Identity() 
+cnn_model = cnn_model.to(device)
+cnn_model.eval() 
+
+def extract_features(dataloader, model):
+    features_list = []
+    labels_list = []
+    
+    with torch.no_grad():
+        for inputs, labels in dataloader:
+            inputs = inputs.to(device)
+            features = model(inputs) 
+            features_list.append(features.cpu().numpy())
+            labels_list.append(labels.cpu().numpy())
+    
+    return np.vstack(features_list), np.hstack(labels_list)
+rf_classifier = RandomForestClassifier(random_state=42)
+
+param_grid_rf = {
+    'n_estimators': [100, 200],
+    'max_depth': [10, 20],
+    'min_samples_split': [2, 5]
+}
+
+grid_search_rf = GridSearchCV(estimator=rf_classifier, param_grid=param_grid_rf, cv=3, scoring='accuracy', n_jobs=-1)
 ```
 
