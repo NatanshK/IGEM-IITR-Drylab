@@ -5,15 +5,17 @@
 - [Dataset](#dataset)
 - [Data Cleaning](#data-cleaning)
 - [Model Training](#model-training)
+  - [CNN + Random Forest](#cnn--random-forest)
+  - [Vision Transformers](#vision-transformers)
+  - [VGG16](#VGG16)
   - [EfficientNet](#efficientnet)
   - [ResNet](#resnet)
-  - [CNN + Random Forest](#cnn--random-forest)
 - [Results](#results)
 
 ### Dataset
 
 The dataset used for this project is available [here](https://data.mendeley.com/datasets/9424skmnrk/1). It consists of:
-- **518 images** of sugarcane leaves infected with *reddot disease*.
+- **518 images** of sugarcane leaves infected with *redrot disease*.
 - **522 images** of healthy sugarcane leaves.
 
 ### To enhance the diversity of the dataset and improve model generalization, we employed a two-step data augmentation process:
@@ -28,7 +30,7 @@ The dataset was further expanded by applying additional augmentation techniques 
       <img src="https://github.com/NatanshK/IGEM-IITR-Drylab/blob/main/Original_Dataset/Healthy/healthy%20(360).jpeg?raw=true" alt="Healthy Image" style="height: 500px;"/>
     </td>
     <td>
-      <h3>Reddot Infected Example:</h3>
+      <h3>Redrot Infected Example:</h3>
       <img src="https://github.com/NatanshK/IGEM-IITR-Drylab/blob/main/Original_Dataset/RedRot/redrot%20(225).jpeg?raw=true" alt="Red Dot Infected Image" style="height: 500px;"/>
     </td>
   </tr>
@@ -66,12 +68,87 @@ def find_bounding_box(image, threshold=10):
     </td>
     <td style="width: 50%; vertical-align: top;">
       <h3>Cleaned Image:</h3>
-      <img src="https://github.com/NatanshK/IGEM-IITR-Drylab/blob/main/DATASET_NEW/REDDOT/aug_redrot%20(1)_270.jpeg?raw=true" alt="Cleaned Image" style="height: 500px; width: auto;"/>
+      <img src="https://github.com/NatanshK/IGEM-IITR-Drylab/blob/main/DATASET_NEW/REDROT/aug_redrot%20(1)_270.jpeg?raw=true" alt="Cleaned Image" style="height: 500px; width: auto;"/>
     </td>
   </tr>
 </table>
 
 ### MODEL TRAINING
+#### CNN + RANDOM FOREST
+A Random Forest classifier was trained on features extracted from a fine-tuned ResNet-18 model, specifically to detect red rot disease in sugarcane leaves. This approach leverages the deep learning model's ability to generate informative feature representations for enhanced classification accuracy.
+
+**Training Code**:
+```python
+import torch
+import torch.nn as nn
+import torchvision.models as models
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import GridSearchCV
+from sklearn.preprocessing import StandardScaler
+
+cnn_model = models.resnet18(weights=ResNet18_Weights.IMAGENET1K_V1)
+cnn_model.fc = nn.Identity()
+cnn_model = cnn_model.to(device)
+cnn_model.eval()
+
+def extract_features(dataloader, model):
+    features_list = []
+    labels_list = []
+    with torch.no_grad():
+        for inputs, labels in dataloader:
+            inputs = inputs.to(device)
+            features = model(inputs)
+            features_list.append(features.cpu().numpy())
+            labels_list.append(labels.cpu().numpy())
+    return np.vstack(features_list), np.hstack(labels_list)
+
+rf_classifier = RandomForestClassifier(random_state=42)
+param_grid_rf = {
+    'n_estimators': [100, 200, 300],
+    'max_depth': [10, 20, None],
+    'min_samples_split': [2, 5, 10],
+    'max_features': ['sqrt'] 
+}
+grid_search_rf = GridSearchCV(estimator=rf_classifier, param_grid=param_grid_rf, cv=3, scoring='accuracy', n_jobs=-1)
+```
+#### Vision Transformers
+The Vision Transformer (ViT) model with a base configuration (ViT-base-patch16-224) was fine-tuned on the dataset, leveraging pretrained weights to enhance performance in detecting red rot disease in sugarcane leaves.
+
+**Training Code**:
+```python
+import timm
+import torch
+import torch.nn as nn
+import torchvision.models as models
+import torch.optim as optim
+from torch.optim.lr_scheduler import ReduceLROnPlateau
+
+model = timm.create_model('vit_base_patch16_224', pretrained=True)
+num_ftrs = model.head.in_features
+model.head = nn.Linear(num_ftrs, 2)
+model = model.to(device)
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.Adam(model.parameters(), lr=0.001)
+scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=5, verbose=True)
+```
+#### VGG16
+VGG16 was fine-tuned on the dataset, leveraging pre-trained ImageNet weights.
+**Training Code**:
+```python
+import torch
+import torch.nn as nn
+import torchvision.models as models
+import torch.optim as optim
+from torch.optim.lr_scheduler import ReduceLROnPlateau
+
+model = models.vgg16(pretrained=True)
+num_ftrs = model.classifier[6].in_features
+model.classifier[6] = nn.Linear(num_ftrs, 2)
+model = model.to(device)
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.Adam(model.parameters(), lr=0.001)
+scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=5, verbose=True)
+```
 #### EFFICIENTNET
 EfficientNet_b0 was trained on the augmented and cleaned dataset.
 
@@ -90,7 +167,6 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=5, verbose=True)
 ```
-
 #### RESNET
 ResNet-152 was fine-tuned on the dataset, leveraging pre-trained ImageNet weights.
 
@@ -111,52 +187,15 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=5, verbose=True)
 ```
-#### CNN + RANDOM FOREST
-A Random Forest classifier was trained on features extracted from a fine-tuned ResNet-18 model, specifically to detect red dot disease in sugarcane leaves. This approach leverages the deep learning model's ability to generate informative feature representations for enhanced classification accuracy.
-
-**Training Code**:
-```python
-import torch
-import torch.nn as nn
-import torchvision.models as models
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import GridSearchCV
-from sklearn.preprocessing import StandardScaler
-
-cnn_model = models.resnet18(pretrained=True)
-cnn_model.fc = nn.Identity() 
-cnn_model = cnn_model.to(device)
-cnn_model.eval() 
-
-def extract_features(dataloader, model):
-    features_list = []
-    labels_list = []
-    with torch.no_grad():
-        for inputs, labels in dataloader:
-            inputs = inputs.to(device)
-            features = model(inputs) 
-            features_list.append(features.cpu().numpy())
-            labels_list.append(labels.cpu().numpy())
-    return np.vstack(features_list), np.hstack(labels_list)
-
-rf_classifier = RandomForestClassifier(random_state=42)
-param_grid_rf = {
-    'n_estimators': [100, 200],
-    'max_depth': [10, 20],
-    'min_samples_split': [2, 5]
-}
-grid_search_rf = GridSearchCV(estimator=rf_classifier, param_grid=param_grid_rf, cv=3, scoring='accuracy', n_jobs=-1)
-```
-
 
 ### RESULTS
 ```markdown
-Below is the comparison of accuracy for the three models:
+Below is the comparison of accuracy for the four models:
 
 | Model               | Accuracy |
 |---------------------|----------|
-| EfficientNet_b0     | 99.40%   |
+| Hybrid CNN + RF     | 96.15%   |
+| Vision Transformers | 96.51%   |
+| VGG16               | 99.16%   |
+| EfficientNet_b0     | 99.64%   |
 | ResNet-152          | 99.88%   |
-| Hybrid CNN + RF     | 96.03%   |
-```
-
